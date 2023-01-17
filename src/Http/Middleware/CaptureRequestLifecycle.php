@@ -82,12 +82,12 @@ class CaptureRequestLifecycle
             'os' => '',
             'start' => Carbon::createFromTimestampMs(static::getStartMicroTimestamp($request) * 1000)->format('Y-m-d H:i:s.u'),
             'end' => now()->format('Y-m-d H:i:s.u'),
-            'parameters' => self::clipLog(collect($request->except(config('laralog.except.fields')))->toJson()),
+            'parameters' => self::clipLog(self::requestToString($request)),
             'performance' => round(microtime(true) - static::getStartMicroTimestamp($request), 6),
-            'response' => self::shouldCapture() ? '' : self::clipLog(self::responseToString($response->getContent())),
+            'response' => self::shouldCapture($request) ? '' : self::clipLog(self::responseToString($response->getContent())),
             'extra' => '',
             'msg' => '',
-            'headers' => '',
+            'headers' => self::headers($request),
             'hostname' => gethostname() ?: 'unknown_host',
             'tag' => static::label(),
         ];
@@ -96,7 +96,7 @@ class CaptureRequestLifecycle
     /**
      * determine if the uri should capture the response body info or not.
      */
-    public static function shouldCapture(): bool
+    public static function shouldCapture(Request $request): bool
     {
         $exceptUris = config('laralog.except.uris');
 
@@ -104,7 +104,7 @@ class CaptureRequestLifecycle
             return false;
         }
 
-        return static::$shouldLabelExceptedUriTag = Str::contains(request()->getUri(), $exceptUris);
+        return static::$shouldLabelExceptedUriTag = Str::contains($request->getUri(), $exceptUris);
     }
 
     public static function responseToString($response): string
@@ -114,5 +114,34 @@ class CaptureRequestLifecycle
         }
 
         return $response;
+    }
+
+    public static function requestToString(Request $request): string
+    {
+        $json = collect($request->except(config('laralog.except.fields')))->toJson();
+        if (!$json) {
+            return serialize($request->except(config('laralog.except.fields')));
+        }
+
+        return $json;
+    }
+
+    public static function headers(Request $request): string
+    {
+        $headers = $request->header();
+
+        if (null === $headers) {
+            return 'null';
+        }
+
+        if (is_string($headers)) {
+            return $headers;
+        }
+
+        if (is_array($headers)) {
+            return collect($headers)->toJson();
+        }
+
+        return serialize($headers);
     }
 }
