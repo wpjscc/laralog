@@ -77,7 +77,10 @@ class CaptureRequestLifecycle
             'channel' => 'frame',
             'uri' => $request->getUri(),
             'method' => $request->getMethod(),
+            'headers' => self::headers($request),
+            'referer' => $request->header('referer') ,
             'ip' => implode(',', $request->getClientIps()),
+            'uid' => UidProcessor::$uid,
             'platform' => '',
             'version' => '',
             'os' => '',
@@ -88,10 +91,8 @@ class CaptureRequestLifecycle
             'response' => self::shouldCapture($request) ? '' : self::clipLog(self::responseToString($response->getContent())),
             'extra' => '',
             'msg' => '',
-            'headers' => self::headers($request),
             'hostname' => gethostname() ?: 'unknown_host',
-            'tag' => static::label(),
-            'uid' => UidProcessor::$uid
+            'tag' => static::label()
         ];
     }
 
