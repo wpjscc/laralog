@@ -1,5 +1,5 @@
 {
-    "name": "shallowman/laralog",
+    "name": "wpjscc/laralog",
     "description": "Custom logger for capturing laravel http lifecycle info",
     "keywords": ["capture", "laravel", "log"],
     "license": "MIT",
