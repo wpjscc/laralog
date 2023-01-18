@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Shallowman\Laralog\LaraLogger;
 use Shallowman\Laralog\Traits\ClipLogTrait;
 use Symfony\Component\HttpFoundation\Response;
+use Shallowman\Laralog\Processor\UidProcessor;
 
 class CaptureRequestLifecycle
 {
@@ -90,6 +91,7 @@ class CaptureRequestLifecycle
             'headers' => self::headers($request),
             'hostname' => gethostname() ?: 'unknown_host',
             'tag' => static::label(),
+            'uid' => UidProcessor::$uid
         ];
     }
 
