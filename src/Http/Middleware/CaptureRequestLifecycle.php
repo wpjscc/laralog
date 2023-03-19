@@ -70,6 +70,7 @@ class CaptureRequestLifecycle
     {
         return [
             '@timestamp' => now()->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'),
+            'type' => 'app',
             'app' => config('app.name') ?? $request->getHttpHost(),
             'env' => config('app.env') ?? 'test',
             'level' => 'info',
