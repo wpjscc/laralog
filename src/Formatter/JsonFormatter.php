@@ -61,6 +61,7 @@ class JsonFormatter extends MonologJsonFormatter
     {
         return [
             '@timestamp' => $this->getCurrentESTimestamp(),
+            'type' => 'app',
             'app' => config('app.name') ?? self::DEFAULT_APP_NAME,
             'env' => config('app.env') ?? self::DEFAULT_APP_ENV,
             'level' => $record['level_name'] ?? self::DEFAULT_LOG_LEVEL,
