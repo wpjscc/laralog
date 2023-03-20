@@ -68,7 +68,7 @@ class CaptureRequestLifecycle
 
     public function captureAndComposeRequiredVariables(Request $request, Response $response): array
     {
-        return [
+        return array_filter([
             '@timestamp' => now()->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'),
             'type' => 'app',
             'app' => config('app.name') ?? $request->getHttpHost(),
@@ -94,7 +94,7 @@ class CaptureRequestLifecycle
             'tag' => static::label(),
             'uid' => UidProcessor::$uid,
             'referer' => $request->header('referer')
-        ];
+        ]);
     }
 
     /**
