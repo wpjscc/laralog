@@ -32,7 +32,7 @@ class JsonFormatter extends MonologJsonFormatter
         $normalizedRecord = $this->normalizeRecord($record);
         $normalized = $this->tailor($normalizedRecord, $record['context'] ?? []);
 
-        return $this->toJson($normalized).PHP_EOL;
+        return $this->toJson(array_filter($normalized)).PHP_EOL;
     }
 
     /**
@@ -59,7 +59,7 @@ class JsonFormatter extends MonologJsonFormatter
      */
     public function normalizeRecord(array $record): array
     {
-        return array_filter([
+        return [
             '@timestamp' => $this->getCurrentESTimestamp(),
             'type' => 'app',
             'app' => config('app.name') ?? self::DEFAULT_APP_NAME,
@@ -84,7 +84,7 @@ class JsonFormatter extends MonologJsonFormatter
             'headers' => '',
             'hostname' => gethostname() ?: self::UNKNOWN_HOST,
             'tag' => static::label(),
-        ]);
+        ];
     }
 
     public static function getStartMicroTimestamp(): float
