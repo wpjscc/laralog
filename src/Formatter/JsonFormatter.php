@@ -59,7 +59,7 @@ class JsonFormatter extends MonologJsonFormatter
      */
     public function normalizeRecord(array $record): array
     {
-        return [
+        return array_filter([
             '@timestamp' => $this->getCurrentESTimestamp(),
             'type' => 'app',
             'app' => config('app.name') ?? self::DEFAULT_APP_NAME,
@@ -84,7 +84,7 @@ class JsonFormatter extends MonologJsonFormatter
             'headers' => '',
             'hostname' => gethostname() ?: self::UNKNOWN_HOST,
             'tag' => static::label(),
-        ];
+        ]);
     }
 
     public static function getStartMicroTimestamp(): float
